@@ -1,5 +1,6 @@
 import {
   Controller,
+  ParseIntPipe,
   // Get,
   // Post,
   // Body,
@@ -36,8 +37,8 @@ export class ProductsController {
   // @Get(':id')
   @MessagePattern({ cmd: 'find-product-by-id' })
   // findOne(@Param('id') id: string) {
-  findOne(@Payload() id: number) {
-    return this.productsService.findOne(+id);
+  findOne(@Payload('id', ParseIntPipe) id: number) {
+    return this.productsService.findOne(id);
   }
 
   // @Patch(':id')
@@ -54,7 +55,7 @@ export class ProductsController {
   // @Delete(':id')
   @MessagePattern({ cmd: 'delete-product' })
   // remove(@Param('id', ParseIntPipe) id: number) {
-  remove(@Payload() id: number) {
-    return this.productsService.remove(id);
+  remove(@Payload() payload: { id: number }) {
+    return this.productsService.remove(Number(payload.id));
   }
 }
