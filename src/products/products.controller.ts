@@ -58,4 +58,9 @@ export class ProductsController {
   remove(@Payload() payload: { id: number }) {
     return this.productsService.remove(Number(payload.id));
   }
+
+  @MessagePattern({ cmd: 'validate-products' })
+  validateProducts(@Payload() ids: number[]) {
+    return this.productsService.validateProducts(ids);
+  }
 }

@@ -105,4 +105,25 @@ export class ProductsService {
     });
     return product;
   }
+
+  async validateProducts(ids: number[]) {
+    // eliminamos ids duplicados ya que si mandamos diferentes ordenes con el mismo id por el tema de los talles
+    ids = Array.from(new Set(ids));
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+
+    // esto significa que algunos productos no fueron encontrados
+    if (products.length !== ids.length) {
+      throw new RpcException({
+        message: `Some products were not found`,
+        status: HttpStatus.BAD_REQUEST,
+      });
+    }
+
+    return products;
+  }
 }
